@@ -2087,6 +2087,9 @@ textarea.w-input, textarea.w-select {
   --color-glass-highlight: rgba(255, 255, 255, .6);
   --color-glass-highlight-low: rgba(255, 255, 255, .1);
   --color-glass-shadow: rgba(31, 38, 135, .12);
+
+  /* Type hierarchy — per-level line-height, mirrors tokens.json `typography.*`. */
+  --type-heading-3-line-height: 20px;
 }
 
 /* Dark mode: matches tokens.dark.json. Applies automatically on a
@@ -2152,33 +2155,18 @@ textarea.w-input, textarea.w-select {
   filter: invert(1);
 }
 
-/* Same problem in the logo ticker: baked-in black logo artwork. Inverting
-   makes it visible on dark. CIFF and SFD are a special case: their PNGs
-   have an opaque WHITE box baked in behind the mark, hidden on light via
-   mix-blend-mode:multiply (multiply(white, X) = X — the box vanishes into
-   whatever's behind it). Inverting flips that box to black, so the
-   dark-mode equivalent hide-trick is `screen` instead of `multiply`
-   (screen(black, X) = X). Either way, the blend needs a real backdrop to
-   read — `.logo-ticker`'s mask-image otherwise isolates it into its own
-   stacking context with nothing behind it, so it has an explicit
-   background-color matching the page (see `.logo-ticker` above). */
+/* Logo ticker: monochrome black logo artwork. Inverting makes it visible
+   on dark. `.logo-ticker`'s mask-image isolates the track into its own
+   stacking context, so it has an explicit background-color matching the
+   page (see `.logo-ticker` above) to keep that context sane. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .logo-ticker-track img {
     filter: invert(1);
-  }
-  :root:not([data-theme="light"]) .logo-ticker-track .image-6,
-  :root:not([data-theme="light"]) .logo-ticker-track .image-7 {
-    mix-blend-mode: screen;
   }
 }
 
 [data-theme="dark"] .logo-ticker-track img {
   filter: invert(1);
-}
-
-[data-theme="dark"] .logo-ticker-track .image-6,
-[data-theme="dark"] .logo-ticker-track .image-7 {
-  mix-blend-mode: screen;
 }
 
 .w-layout-grid {
@@ -2404,12 +2392,12 @@ p {
   margin-bottom: 0;
   font-size: 16px;
   font-weight: 400;
-  line-height: 30px;
+  line-height: var(--type-heading-3-line-height);
 }
 
 .section {
   max-width: 1440px;
-  margin-top: -220px;
+  margin-top: -300px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -2521,43 +2509,40 @@ p {
   }
 }
 
-.image-6 {
-  opacity: .36;
-  mix-blend-mode: multiply;
-  margin-top: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.image-7 {
-  opacity: .35;
-  mix-blend-mode: multiply;
-  padding-bottom: 0;
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
-.image-8 {
-  opacity: .4;
-}
-
-.image-9 {
+.ticker-logo {
   opacity: .5;
 }
 
-.image-10 {
-  opacity: .4;
+.logo-ticker-track .logo-centric {
+  max-height: 18px;
+}
+
+.logo-ticker-track .logo-markmi {
+  max-height: 54px;
+}
+
+.logo-ticker-track .logo-escm,
+.logo-ticker-track .logo-nedap {
+  max-height: 27px;
 }
 
 .div-block-3 {
-  justify-content: center;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 8px;
   display: flex;
+  position: relative;
+  z-index: 2;
+}
+
+.paragraph.platform-intro {
+  margin-top: 0;
 }
 
 .section-2 {
   max-width: 1440px;
-  margin-top: 24px;
+  margin-bottom: 24px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -2790,7 +2775,7 @@ p {
 
 .section-3 {
   max-width: 1440px;
-  margin-bottom: 24px;
+  margin-top: var(--grey--size-lg);
   margin-left: auto;
   margin-right: auto;
 }
@@ -2816,10 +2801,6 @@ p {
 
 .paragraph-2 {
   font-weight: 400;
-}
-
-.image-12 {
-  opacity: .5;
 }
 
 .social-icons, .flex-block-2-copy {
@@ -2881,12 +2862,6 @@ p {
     grid-template-rows: auto;
     grid-template-columns: 1fr 1fr 1fr;
     padding-bottom: 32px;
-  }
-
-  .image-6 {
-    opacity: .5;
-    max-height: 100%;
-    padding-bottom: 0;
   }
 
   .div-block-3 {
@@ -2999,16 +2974,7 @@ p {
     display: grid;
   }
 
-  .image-6 {
-    max-width: 100%;
-  }
-
-  .image-7 {
-    max-width: 100%;
-    max-height: none;
-  }
-
-  .image-8, .image-9, .image-10 {
+  .ticker-logo {
     max-width: 100%;
   }
 
@@ -3056,11 +3022,6 @@ p {
 
   .paragraph-2 {
     text-align: center;
-  }
-
-  .image-12 {
-    max-width: 100%;
-    display: inline-flex;
   }
 
   .social-icons {
@@ -3146,10 +3107,6 @@ p {
     grid-row-gap: 16px;
   }
 
-  .image-12 {
-    padding: 0;
-  }
-
   .flex-block-2-copy {
     grid-column-gap: 0px;
     grid-row-gap: 0px;
@@ -3178,7 +3135,7 @@ p {
 }
 
 #w-node-_2fedc88c-6892-8521-4616-40758713ebdf-36f34b86 {
-  grid-area: 1 / 1 / 2 / 2;
+  grid-area: 1 / 1 / 2 / 3;
   align-self: auto;
 }
 
@@ -3219,6 +3176,8 @@ p {
 #w-node-c0ac4fec-ed34-2349-8360-a8a056c8787a-36f34b86 {
   grid-area: 1 / 7 / 2 / 13;
   justify-self: auto;
+  border-bottom: none;
+  height: auto;
 }
 
 #w-node-_52f19b59-c5ac-18b0-c55c-b17f00054ab6-36f34b86 {
